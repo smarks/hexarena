@@ -31,3 +31,27 @@ def test_scripted_then_random() -> None:
     dice = Dice(seed=1, scripted=[6])
     assert dice.roll() == 6  # scripted first
     assert 1 <= dice.roll() <= 6  # then random
+
+
+def test_dn_scripted_returns_value_for_any_sides() -> None:
+    dice = Dice(scripted=[17, 20, 1])
+    assert dice.dn(20) == 17  # scripted value returned verbatim
+    assert dice.dn(20) == 20
+    assert dice.dn(20) == 1
+
+
+def test_dn_random_respects_sides() -> None:
+    dice = Dice(seed=7)
+    assert all(1 <= dice.dn(20) <= 20 for _ in range(50))
+
+
+def test_dn_rejects_degenerate_sides() -> None:
+    import pytest
+
+    with pytest.raises(ValueError):
+        Dice().dn(1)
+
+
+def test_roll_is_d6_via_dn() -> None:
+    # roll() now delegates to dn(6); behavior unchanged.
+    assert all(1 <= Dice(seed=3).roll() <= 6 for _ in range(50))

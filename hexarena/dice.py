@@ -28,11 +28,22 @@ class Dice:
         self._rng = random.Random(seed)
         self._scripted: deque[int] = deque(scripted or [])
 
-    def roll(self) -> int:
-        """One d6: the next scripted value, or a fresh random 1-6."""
+    def dn(self, sides: int) -> int:
+        """One die of ``sides`` faces: next scripted value, or random 1..sides.
+
+        Games that aren't d6-based (e.g. a d20 roll-over system) read dice
+        through this. Scripted values are returned verbatim regardless of
+        ``sides``, so a test can feed an exact d20 result.
+        """
+        if sides < 2:
+            raise ValueError(f"a die needs at least 2 sides: {sides}")
         if self._scripted:
             return self._scripted.popleft()
-        return self._rng.randint(1, 6)
+        return self._rng.randint(1, sides)
+
+    def roll(self) -> int:
+        """One d6: the next scripted value, or a fresh random 1-6."""
+        return self.dn(6)
 
     def roll_n(self, count: int) -> list[int]:
         """A list of ``count`` individual d6 results."""
