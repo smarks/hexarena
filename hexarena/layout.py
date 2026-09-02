@@ -10,14 +10,29 @@ game adjacency.
 
 ``size`` is the distance from a hex centre to a vertex.
 """
+
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass
 
-from .hex import FLAT, POINTY, Hex
+from .hex import FLAT, POINTY
 
 SQRT3 = math.sqrt(3.0)
+
+
+def axial_hex_center(q: int, r: int, *, size: float) -> tuple[float, float]:
+    """Pixel centre of the pointy-top axial hex ``(q, r)``.
+
+    Unlike :func:`hex_center`, there is no ``margin``: axial hexes radiate in
+    every direction from the origin rather than filling a positive-only
+    printed grid, so ``(0, 0)`` maps to pixel ``(0, 0)`` and callers translate
+    or scale the result for their own canvas. ``size`` is the distance from a
+    hex centre to a vertex, as in :func:`hex_center`.
+    """
+    center_x = size * (SQRT3 * q + (SQRT3 / 2.0) * r)
+    center_y = size * 1.5 * r
+    return center_x, center_y
 
 
 @dataclass(frozen=True)

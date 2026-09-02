@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hexarena"
-version = "0.1.0"
+version = "0.2.0"
 description = "Game-agnostic hex-grid primitives (coords, dice, pathfinding, layout) shared across hex wargames."
 requires-python = ">=3.11"
 dependencies = []
